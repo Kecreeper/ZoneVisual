@@ -143,6 +143,28 @@ function ZoneVisual:Tween(tweenInfo: TweenInfo, properties: table)
 	end
 end
 
+function ZoneVisual:Cancel()
+	for _,v in self.tweens do
+		v:Cancel()
+	end
+end
+
+function ZoneVisual:Pause()
+	for _,v in self.tweens do
+		v:Pause()
+	end
+end
+
+function ZoneVisual.getTweens(zone)
+	local table
+
+	for i,v in zone.tweens do
+		table[i] = v
+	end
+
+	return table
+end
+
 function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
 	if part == nil then
 		error("No part selected")
