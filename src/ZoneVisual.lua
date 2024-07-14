@@ -8,6 +8,7 @@ ZoneVisual.__index = ZoneVisual
 
 local TweenService = game:GetService("TweenService")
 
+--[[
 local function checkProperties(properties: table): table
 	if not properties["Color"] then
 		properties["Color"] = ColorSequence.new(Color3.new(1,1,1))
@@ -18,13 +19,10 @@ local function checkProperties(properties: table): table
 	if not properties["Segments"] then
 		properties["Segments"] = 200
 	end
-	if not properties["Texture"] then
-		properties["Texture"] = "http://www.roblox.com/asset/?id=18153329100"
-	end
 
 	return properties
 end
-
+]]
 function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	if part == nil then
 		error("No part inputted")
@@ -38,11 +36,13 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 		error("Height must be over 0")
 	end
 
+	--[[
 	if properties then
 		properties = checkProperties(properties)
-	else
-		properties = nil
+	elseif not properties then
+		properties = {}
 	end
+	]]
 
 	local height = height*2
 
@@ -81,23 +81,26 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	table.insert(beams, B3)
 	table.insert(beams, B4)
 
-	if properties then
+	for i,v in beams do
+		v.Parent = part
+		v.Width0 = height
+		v.Width1 = height
+		v.Texture = "http://www.roblox.com/asset/?id=18153329100"
+		v.LightEmission = 1
+		v.LightInfluence = 0
+		v.TextureMode = Enum.TextureMode.Static
+		v.TextureSpeed = 0
+	end
+
+	--[[
+	if properties ~= nil then
 		for i,v in properties do
 			for _,beam in beams do
 				beam[i] = v
 			end
 		end
 	end
-	
-	for i,v in beams do
-		v.Parent = part
-		v.Width0 = height
-		v.Width1 = height
-		v.LightEmission = 1 -- temporary
-		v.LightInfluence = 0 -- temporary
-		v.TextureMode = Enum.TextureMode.Static
-		v.TextureSpeed = 0
-	end
+	]]
 
 	B1.Attachment0 = A1
 	B1.Attachment1 = A2
