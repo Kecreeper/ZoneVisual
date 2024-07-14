@@ -2,27 +2,30 @@
 --# selene: allow(unused_variable)
 
 local ZoneVisual = {}
-
 ZoneVisual.__index = ZoneVisual
 
-
+--------------
 local TweenService = game:GetService("TweenService")
+--------------
 
---[[
-local function checkProperties(properties: table): table
-	if not properties["Color"] then
-		properties["Color"] = ColorSequence.new(Color3.new(1,1,1))
- 	end
-	if not properties["Transparency"] then
-		properties["Transparency"] = NumberSequence.new(.5)
+----------------------------
+local function checkColor(color: ColorSequence | Color3)
+	if color:IsA("Color3") then
+		color = ColorSequence.new(color)
 	end
-	if not properties["Segments"] then
-		properties["Segments"] = 200
+
+	return color
+end
+
+local function checkProperties(properties: table): table
+	if properties["Color"] then
+		properties["Color"] = checkColor(properties["Color"])
 	end
 
 	return properties
 end
-]]
+----------------------------
+
 function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	if part == nil then
 		error("No part inputted")
@@ -35,14 +38,6 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	elseif height == 0 or height <= 0 then
 		error("Height must be over 0")
 	end
-
-	--[[
-	if properties then
-		properties = checkProperties(properties)
-	elseif not properties then
-		properties = {}
-	end
-	]]
 
 	local height = height*2
 
@@ -93,6 +88,7 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	end
 
 	if properties then
+		properties = checkProperties()
 		for i,v in properties do
 			for _,beam in beams do
 				beam[i] = v
@@ -112,17 +108,18 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	B4.Attachment0 = A4
 	B4.Attachment1 = A1
 
-	local self = setmetatable(beams, ZoneVisual)
+	local self = setmetatable({}, ZoneVisual)
+	self.beams = beams
+	self.tweens = {}
 
 	return self
 end
---[[
+
 function ZoneVisual:destroy()
-	for _,v in self do
-		v:Destroy()
-	end
+	self:Destroy()
 end
 
+--[[
 function ZoneVisual.tween(self: ZoneVisual, tweenInfo: TweenInfo, properties: table)
 	for _,v in self do
 		local tween = TweenService.new(v, tweenInfo, properties)
