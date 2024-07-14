@@ -92,15 +92,13 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 		v.TextureSpeed = 0
 	end
 
-	--[[
-	if properties ~= nil then
+	if properties then
 		for i,v in properties do
 			for _,beam in beams do
 				beam[i] = v
 			end
 		end
 	end
-	]]
 
 	B1.Attachment0 = A1
 	B1.Attachment1 = A2
