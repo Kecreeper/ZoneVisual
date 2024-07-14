@@ -1,6 +1,6 @@
-local beamZone = {}
+local ZoneVisual = {}
 
-function beamZone.newSquare(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
+function ZoneVisual.newSquare(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
 	if part == nil then
 		error("No part selected")
 	elseif not part:IsA("BasePart") then
@@ -88,7 +88,7 @@ function beamZone.newSquare(part:BasePart, height: number, color:ColorSequence, 
 	return beams
 end
 
-function beamZone.newCircle(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
+function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
 	if part == nil then
 		error("No part selected")
 	elseif not part:IsA("BasePart") then
@@ -176,4 +176,4 @@ function beamZone.newCircle(part:BasePart, height: number, color:ColorSequence, 
 
 end
 
-return beamZone
+return ZoneVisual
