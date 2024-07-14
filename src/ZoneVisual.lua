@@ -135,14 +135,14 @@ function ZoneVisual:Destroy()
 	end
 end
 
---[[
-function ZoneVisual.tween(self: ZoneVisual, tweenInfo: TweenInfo, properties: table)
-	for _,v in self do
-		local tween = TweenService.new(v, tweenInfo, properties)
+function ZoneVisual:Tween(tweenInfo: TweenInfo, properties: table)
+	for i,v in self.beams do
+		local tween = TweenService:Create(v, tweenInfo, properties)
+		self.tweens[i] = tween
 		tween:Play()
 	end
 end
-]]
+
 function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
 	if part == nil then
 		error("No part selected")
