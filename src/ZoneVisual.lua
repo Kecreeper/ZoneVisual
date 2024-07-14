@@ -1,33 +1,46 @@
 --# selene: allow(shadowing)
+--# selene: allow(unused_variable)
 
 local ZoneVisual = {}
 
-local Zone = {}
-Zone.__index = Zone
+ZoneVisual.__index = ZoneVisual
 
-function ZoneVisual.newSquare(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
-	if part == nil then
-		error("No part selected")
-	elseif not part:IsA("BasePart") then
-		error('Selected "' .. part.Name .. '" is not a BasePart')
+
+local TweenService = game:GetService("TweenService")
+
+local function checkProperties(properties: table): table
+	if not properties["Color"] then
+		properties["Color"] = ColorSequence.new(Color3.new(1,1,1))
+ 	end
+	if not properties["Transparency"] then
+		properties["Transparency"] = NumberSequence.new(.5)
 	end
+	if not properties["Segments"] then
+		properties["Segments"] = 200
+	end
+	if not properties["Texture"] then
+		properties["Texture"] = "http://www.roblox.com/asset/?id=18153329100"
+	end
+
+	return properties
+end
+
+function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
+	if part == nil then
+		error("No part inputted")
+	elseif not part:IsA("BasePart") then
+		error('Inputted "' .. part.Name .. '" is not a BasePart')
+	end
+
 	if height == nil then
 		error("No height inputted")
 	elseif height == 0 or height <= 0 then
 		error("Height must be over 0")
 	end
-	
+
+	local properties = checkProperties(properties)
+
 	local height = height*2
-	local color = color or ColorSequence.new(Color3.new(1,1,1))
-	local lightEmission = lightEmission or 0
-	local lightInfluence = lightInfluence or 1
-	if transparency ~= nil then
-		transparency = NumberSequence.new(transparency)
-	else
-		transparency = NumberSequence.new(.5)
-	end
-	local segments = segments or 200
-	local texture = "http://www.roblox.com/asset/?id=18153329100"
 
 	local x = part.Size.X/2
 	local y = part.Size.Y/2
@@ -64,16 +77,18 @@ function ZoneVisual.newSquare(part:BasePart, height: number, color:ColorSequence
 	table.insert(beams, B3)
 	table.insert(beams, B4)
 
+	for i,v in properties do
+		for _,beam in beams do
+			beam[i] = v
+		end
+	end
+
 	for i,v in beams do
 		v.Parent = part
-		v.Color = color
-		v.Texture = texture
 		v.Width0 = height
 		v.Width1 = height
-		v.Segments = segments
-		v.LightEmission = lightEmission
-		v.LightInfluence = lightInfluence
-		v.Transparency = transparency
+		v.LightEmission = 1 -- temporary
+		v.LightInfluence = 0 -- temporary
 		v.TextureMode = Enum.TextureMode.Static
 		v.TextureSpeed = 0
 	end
@@ -90,9 +105,24 @@ function ZoneVisual.newSquare(part:BasePart, height: number, color:ColorSequence
 	B4.Attachment0 = A4
 	B4.Attachment1 = A1
 
-	return beams
+	local self = setmetatable(beams, ZoneVisual)
+
+	return self
+end
+--[[
+function ZoneVisual:destroy()
+	for _,v in self do
+		v:Destroy()
+	end
 end
 
+function ZoneVisual.tween(self: ZoneVisual, tweenInfo: TweenInfo, properties: table)
+	for _,v in self do
+		local tween = TweenService.new(v, tweenInfo, properties)
+		tween:Play()
+	end
+end
+]]
 function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
 	if part == nil then
 		error("No part selected")
