@@ -1,4 +1,9 @@
+--# selene: allow(shadowing)
+
 local ZoneVisual = {}
+
+local Zone = {}
+Zone.__index = Zone
 
 function ZoneVisual.newSquare(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
 	if part == nil then
