@@ -37,6 +37,7 @@ local function checkProperties(properties: table): table
 end
 -----------------------------------------------
 
+--------module---------
 function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	if part == nil then
 		error("No part inputted")
@@ -125,8 +126,13 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	return self
 end
 
-function ZoneVisual:destroy()
-	self:Destroy()
+function ZoneVisual:Destroy()
+	for _,v in self.beams do
+		v:Destroy()
+	end
+	for _,v in self.tweens do
+		v:Destroy()
+	end
 end
 
 --[[
@@ -224,5 +230,6 @@ function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence
 	B2.CurveSize1 = curve1
 
 end
+-----------------------
 
 return ZoneVisual
