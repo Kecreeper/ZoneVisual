@@ -4,11 +4,11 @@
 local ZoneVisual = {}
 ZoneVisual.__index = ZoneVisual
 
---------------
+--------------services
 local TweenService = game:GetService("TweenService")
---------------
+----------------------
 
-----------------------------
+---------------------------- local functions
 local function checkColor(color: ColorSequence | Color3)
 	if color:IsA("Color3") then
 		color = ColorSequence.new(color)
@@ -17,14 +17,25 @@ local function checkColor(color: ColorSequence | Color3)
 	return color
 end
 
+local function checkTransparency(transparency: NumberSequence | number)
+	if transparency:IsA("number") then
+		transparency = NumberSequence.new(transparency)
+	end
+
+	return transparency
+end
+
 local function checkProperties(properties: table): table
 	if properties["Color"] then
 		properties["Color"] = checkColor(properties["Color"])
 	end
+	if properties["Transparency"] then
+		properties["Transparency"] = checkTransparency(properties["Transparency"])
+	end
 
 	return properties
 end
-----------------------------
+-----------------------------------------------
 
 function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	if part == nil then
@@ -81,8 +92,6 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 		v.Width0 = height
 		v.Width1 = height
 		v.Texture = "http://www.roblox.com/asset/?id=18153329100"
-		v.LightEmission = 1
-		v.LightInfluence = 0
 		v.TextureMode = Enum.TextureMode.Static
 		v.TextureSpeed = 0
 	end
@@ -112,6 +121,7 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	self.beams = beams
 	self.tweens = {}
 
+	print(self)
 	return self
 end
 
