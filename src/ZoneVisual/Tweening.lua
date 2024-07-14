@@ -50,8 +50,9 @@ local function evalColorSequence(sequence: ColorSequence, time: number)
     end
 end
 
-local function numSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: number)
+local function tweenNumSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: number)
     local num = Instance.new("NumberValue")
+    num.Value = evalNumberSequence(instance[property], 0)
     local tween = TweenService:Create(num, tweenInfo, {Value = goal})
     
     num.Changed:Connect(function()
@@ -65,46 +66,47 @@ local function numSeq(instance: Instance, property: string, tweenInfo: TweenInfo
     return tween
 end
 
-local function numSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: Color3)
-    local num = Instance.new("Color3Value")
-    local tween = TweenService:Create(num, tweenInfo, {Value = goal})
+local function tweenColorSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: Color3)
+    local clr = Instance.new("Color3Value")
+    clr.Value = evalColorSequence(instance[property], 0)
+    local tween = TweenService:Create(clr, tweenInfo, {Value = goal})
     
-    num.Changed:Connect(function()
-        instance[property] = num.Value
+    clr.Changed:Connect(function()
+        instance[property] = clr.Value
     end)
 
     tween:Play()
     tween.Completed:Connect(function()
-        num:Destroy()
+        clr:Destroy()
     end)
     return tween
 end
 
-function Tweening.NumSeq(instance, tweenInfo, goal)
+function Tweening.NumSeq(instance: Instance, tweenInfo: TweenInfo, goal: number)
     local self = setmetatable({}, Tweening)
     self.type = "NumSeq"
     self.instance = instance
     self.tweenInfo = tweenInfo
-    self.target = goal
+    self.goal = goal
 
     return self
 end
 
-function Tweening.ColorSeq(instance, tweenInfo, goal: Color3)
+function Tweening.ColorSeq(instance: Instance, tweenInfo: TweenInfo, goal: Color3)
     local self = setmetatable({}, Tweening)
     self.type = "ColorSeq"
     self.instance = instance
     self.tweenInfo = tweenInfo
-    self.target = goal
+    self.goal = goal
 
     return self
 end
 
-function Tweening:Tween()
+function Tweening:Tween(tweenInfo: TweenInfo, goal: number | Color3)
     if self.type == "NumSeq" then
-        -- tween numseq
+        tweenNumSeq(self.instance, tweenInfo, goal)
     elseif self.type == "ColorSeq" then
-        -- tween colorseq
+        tweenColorSeq(self.instance, tweenInfo, goal)
     end
 end
 
