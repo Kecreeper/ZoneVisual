@@ -38,7 +38,11 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 		error("Height must be over 0")
 	end
 
-	local properties = checkProperties(properties)
+	if properties then
+		properties = checkProperties(properties)
+	else
+		properties = nil
+	end
 
 	local height = height*2
 
@@ -77,12 +81,14 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	table.insert(beams, B3)
 	table.insert(beams, B4)
 
-	for i,v in properties do
-		for _,beam in beams do
-			beam[i] = v
+	if properties then
+		for i,v in properties do
+			for _,beam in beams do
+				beam[i] = v
+			end
 		end
 	end
-
+	
 	for i,v in beams do
 		v.Parent = part
 		v.Width0 = height
