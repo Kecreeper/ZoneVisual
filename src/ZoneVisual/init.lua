@@ -6,6 +6,7 @@ ZoneVisual.__index = ZoneVisual
 
 --------------services
 local TweenService = game:GetService("TweenService")
+local Tweening = require(script.Tweening)
 ----------------------
 
 ---------------------------- local functions
@@ -166,8 +167,15 @@ function ZoneVisual.getTweens(zone)
 	return table
 end
 
-function ZoneVisual:TweenColor()
+function ZoneVisual:TweenColor(tweenInfo: TweenInfo, color3: Color3)
+	local tweens = {}
+	for _,v in self.beams do
+		local tween = Tweening.ColorSeq(v, "Color", tweenInfo, color3)
+		table.insert(tweens, tween)
+		tween:Play()
+	end
 
+	return tweens
 end
 
 function ZoneVisual:TweenTransparency()

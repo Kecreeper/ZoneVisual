@@ -56,7 +56,7 @@ local function tweenNumSeq(instance: Instance, property: string, tweenInfo: Twee
     local tween = TweenService:Create(num, tweenInfo, {Value = goal})
     
     num.Changed:Connect(function()
-        instance[property] = num.Value
+        instance[property] = NumberSequence.new(num.Value)
     end)
 
     tween:Play()
@@ -72,7 +72,7 @@ local function tweenColorSeq(instance: Instance, property: string, tweenInfo: Tw
     local tween = TweenService:Create(clr, tweenInfo, {Value = goal})
     
     clr.Changed:Connect(function()
-        instance[property] = clr.Value
+        instance[property] = ColorSequence.new(clr.Value)
     end)
 
     tween:Play()
@@ -92,21 +92,22 @@ function Tweening.NumSeq(instance: Instance, tweenInfo: TweenInfo, goal: number)
     return self
 end
 
-function Tweening.ColorSeq(instance: Instance, tweenInfo: TweenInfo, goal: Color3)
+function Tweening.ColorSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: Color3)
     local self = setmetatable({}, Tweening)
     self.type = "ColorSeq"
     self.instance = instance
+    self.property = property
     self.tweenInfo = tweenInfo
     self.goal = goal
 
     return self
 end
 
-function Tweening:Tween(tweenInfo: TweenInfo, goal: number | Color3)
+function Tweening:Play()
     if self.type == "NumSeq" then
-        tweenNumSeq(self.instance, tweenInfo, goal)
+        tweenNumSeq(self.instance, self.property, self.tweenInfo, self.goal)
     elseif self.type == "ColorSeq" then
-        tweenColorSeq(self.instance, tweenInfo, goal)
+        tweenColorSeq(self.instance, self.property, self.tweenInfo, self.goal)
     end
 end
 
