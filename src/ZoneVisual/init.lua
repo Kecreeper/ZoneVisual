@@ -123,6 +123,7 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	local self = setmetatable({}, ZoneVisual)
 	self.beams = beams
 	self.tweens = {}
+	self.tweeningTweens = {}
 
 	print(self)
 	return self
@@ -168,14 +169,11 @@ function ZoneVisual.getTweens(zone)
 end
 
 function ZoneVisual:TweenColor(tweenInfo: TweenInfo, color3: Color3)
-	local tweens = {}
 	for _,v in self.beams do
 		local tween = Tweening.ColorSeq(v, "Color", tweenInfo, color3)
-		table.insert(tweens, tween)
+		table.insert(self.tweeningTweens, tween)
 		tween:Play()
 	end
-
-	return tweens
 end
 
 function ZoneVisual:TweenTransparency()

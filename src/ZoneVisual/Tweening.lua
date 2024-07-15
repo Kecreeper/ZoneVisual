@@ -88,6 +88,7 @@ function Tweening.NumSeq(instance: Instance, tweenInfo: TweenInfo, goal: number)
     self.instance = instance
     self.tweenInfo = tweenInfo
     self.goal = goal
+    self.realtween = {}
 
     return self
 end
@@ -99,16 +100,23 @@ function Tweening.ColorSeq(instance: Instance, property: string, tweenInfo: Twee
     self.property = property
     self.tweenInfo = tweenInfo
     self.goal = goal
+    self.realtween = {}
 
     return self
 end
 
 function Tweening:Play()
     if self.type == "NumSeq" then
-        tweenNumSeq(self.instance, self.property, self.tweenInfo, self.goal)
+        local tween = tweenNumSeq(self.instance, self.property, self.tweenInfo, self.goal)
+        self.realtween = tween
     elseif self.type == "ColorSeq" then
-        tweenColorSeq(self.instance, self.property, self.tweenInfo, self.goal)
+        local tween = tweenColorSeq(self.instance, self.property, self.tweenInfo, self.goal)
+        self.realtween = tween
     end
+end
+
+function Tweening:Cancel()
+    self.realtween:Cancel()
 end
 
 return Tweening
