@@ -10,7 +10,7 @@ local TweenService = game:GetService("TweenService")
 
 ---------------------------- local functions
 local function checkColor(color: ColorSequence | Color3)
-	if color:IsA("Color3") then
+	if typeof(color) == "Color3" then
 		color = ColorSequence.new(color)
 	end
 
@@ -18,7 +18,7 @@ local function checkColor(color: ColorSequence | Color3)
 end
 
 local function checkTransparency(transparency: NumberSequence | number)
-	if transparency:IsA("number") then
+	if type(transparency) == "number" then
 		transparency = NumberSequence.new(transparency)
 	end
 
@@ -98,7 +98,7 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	end
 
 	if properties then
-		properties = checkProperties()
+		properties = checkProperties(properties)
 		for i,v in properties do
 			for _,beam in beams do
 				beam[i] = v
@@ -165,6 +165,7 @@ function ZoneVisual.getTweens(zone)
 	return table
 end
 
+-- below is not touched yet
 function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
 	if part == nil then
 		error("No part selected")
