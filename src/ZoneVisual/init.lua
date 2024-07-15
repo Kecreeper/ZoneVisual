@@ -88,10 +88,11 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	table.insert(beams, B3)
 	table.insert(beams, B4)
 
-	for i,v in beams do
+	for i,v: Beam in beams do
 		v.Parent = part
 		v.Width0 = height
 		v.Width1 = height
+		v.Segments = 200
 		v.Texture = "http://www.roblox.com/asset/?id=18153329100"
 		v.TextureMode = Enum.TextureMode.Static
 		v.TextureSpeed = 0
@@ -163,6 +164,14 @@ function ZoneVisual.getTweens(zone)
 	end
 
 	return table
+end
+
+function ZoneVisual:TweenColor()
+
+end
+
+function ZoneVisual:TweenTransparency()
+
 end
 
 -- below is not touched yet
