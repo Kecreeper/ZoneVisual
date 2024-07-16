@@ -35,22 +35,17 @@ local function checkProperties(properties: table): table
 
 	return properties
 end
------------------------------------------------
 
---------module---------
-function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
-	if part == nil then
-		error("No part inputted")
-	elseif not part:IsA("BasePart") then
-		error('Inputted "' .. part.Name .. '" is not a BasePart')
+local function applyProperties(properties: table, object): table
+	properties = checkProperties(properties)
+	for i,v in properties do
+		for _,beam in object.beams do
+			beam[i] = v
+		end
 	end
+end
 
-	if height == nil then
-		error("No height inputted")
-	elseif height == 0 or height <= 0 then
-		error("Height must be over 0")
-	end
-
+local function makeRectangle(part:BasePart, height: number)
 	local height = height*2
 
 	local x = part.Size.X/2
@@ -98,15 +93,6 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 		v.TextureSpeed = 0
 	end
 
-	if properties then
-		properties = checkProperties(properties)
-		for i,v in properties do
-			for _,beam in beams do
-				beam[i] = v
-			end
-		end
-	end
-
 	B1.Attachment0 = A1
 	B1.Attachment1 = A2
 
@@ -125,6 +111,103 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 
 	print(self)
 	return self
+end
+
+local function makeCircle(part:BasePart, height: number)
+	local height = height*2
+
+	local x = part.Size.X/2
+	local y = part.Size.Y/2
+	local z = part.Size.Z/2
+	local radius
+	if x > z then
+		radius = x
+	elseif z > x then
+		radius = z
+	elseif x == z then
+		radius = x or z
+	end
+
+	local curve1 = (radius*4)/3
+	local curve2 = (-radius*4)/3
+
+	local A1 = Instance.new("Attachment")
+	local A2 = Instance.new("Attachment")
+	local attachments = {}
+
+	table.insert(attachments, A1)
+	table.insert(attachments, A2)
+
+	for _,v in attachments do
+		v.Parent = part
+	end
+
+	A1.Position = Vector3.new(0, -y, radius)
+	A2.Position = Vector3.new(0, -y, -radius)
+
+	local B1 = Instance.new("Beam")
+	local B2 = Instance.new("Beam")
+	local beams = {}
+
+	table.insert(beams, B1)
+	table.insert(beams, B2)
+
+	for _,v: Beam in beams do
+		v.Parent = part
+		v.Width0 = height
+		v.Width1 = height
+		v.Segments = 200
+		v.Texture = "http://www.roblox.com/asset/?id=18153329100"
+		v.TextureMode = Enum.TextureMode.Static
+		v.TextureSpeed = 0
+	end
+
+	B1.Attachment0 = A1
+	B1.Attachment1 = A2
+
+	B2.Attachment0 = A2
+	B2.Attachment1 = A1
+
+	B1.CurveSize0 = curve1
+	B1.CurveSize1 = curve2
+
+	B2.CurveSize0 = curve2
+	B2.CurveSize1 = curve1
+
+	local self = setmetatable({}, ZoneVisual)
+	self.beams = beams
+	self.tweens = {}
+
+	return self
+end
+-----------------------------------------------
+
+--------module---------
+function ZoneVisual.new(part:BasePart, height: number, zoneType: string, properties: table)
+	if part == nil then
+		error("No part inputted")
+	elseif not part:IsA("BasePart") then
+		error('Inputted "' .. part.Name .. '" is not a BasePart')
+	end
+
+	if height == nil then
+		error("No height inputted")
+	elseif height == 0 or height <= 0 then
+		error("Height must be over 0")
+	end
+
+	local object
+	if zoneType == "Rectangle" then
+		object = makeRectangle()
+	elseif type == "Circle" then
+		object = makeCircle()
+	else
+		error('Inputted "' .. zoneType '" is not a valid type')
+	end
+
+	if properties then
+		applyProperties(properties, object)
+	end
 end
 
 function ZoneVisual:Destroy()
@@ -185,13 +268,10 @@ function ZoneVisual:TweenTransparency(tweenInfo: TweenInfo, number: number)
 end
 
 function ZoneVisual:ChangeProperties(properties: table)
-	for i,v in properties do
-		for _,beam in self.beams do
-			beam[i] = v
-		end
-	end
+	applyProperties(properties, self)
 end
 
+--[[
 function ZoneVisual.newCircle(part:BasePart, height: number, properties: table)
 	if part == nil then
 		error("No part inputted")
@@ -205,53 +285,7 @@ function ZoneVisual.newCircle(part:BasePart, height: number, properties: table)
 		error("Height must be over 0")
 	end
 	
-	local height = height*2
-
-	local x = part.Size.X/2
-	local y = part.Size.Y/2
-	local z = part.Size.Z/2
-	local radius
-	if x > z then
-		radius = x
-	elseif z > x then
-		radius = z
-	elseif x == z then
-		radius = x or z
-	end
-
-	local curve1 = (radius*4)/3
-	local curve2 = (-radius*4)/3
-
-	local A1 = Instance.new("Attachment")
-	local A2 = Instance.new("Attachment")
-	local attachments = {}
-
-	table.insert(attachments, A1)
-	table.insert(attachments, A2)
-
-	for _,v in attachments do
-		v.Parent = part
-	end
-
-	A1.Position = Vector3.new(0, -y, radius)
-	A2.Position = Vector3.new(0, -y, -radius)
-
-	local B1 = Instance.new("Beam")
-	local B2 = Instance.new("Beam")
-	local beams = {}
-
-	table.insert(beams, B1)
-	table.insert(beams, B2)
-
-	for _,v: Beam in beams do
-		v.Parent = part
-		v.Width0 = height
-		v.Width1 = height
-		v.Segments = 200
-		v.Texture = "http://www.roblox.com/asset/?id=18153329100"
-		v.TextureMode = Enum.TextureMode.Static
-		v.TextureSpeed = 0
-	end
+	
 
 	if properties then
 		properties = checkProperties(properties)
@@ -261,25 +295,8 @@ function ZoneVisual.newCircle(part:BasePart, height: number, properties: table)
 			end
 		end
 	end
-
-	B1.Attachment0 = A1
-	B1.Attachment1 = A2
-
-	B2.Attachment0 = A2
-	B2.Attachment1 = A1
-
-	B1.CurveSize0 = curve1
-	B1.CurveSize1 = curve2
-
-	B2.CurveSize0 = curve2
-	B2.CurveSize1 = curve1
-
-	local self = setmetatable({}, ZoneVisual)
-	self.beams = beams
-	self.tweens = {}
-
-	return self
 end
+]]
 -----------------------
 
 return ZoneVisual
