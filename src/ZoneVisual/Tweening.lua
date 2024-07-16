@@ -102,29 +102,31 @@ function Tweening.NumSeq(instance: Instance, tweenInfo: TweenInfo, goal: table)
     self.instance = instance
     self.tweenInfo = tweenInfo
     self.goal = goal
-    self.realtween = {}
 
     return self
 end
 
-function Tweening.ColorSeq(instance: Instance, tweenInfo: TweenInfo, goal: Color3)
+function Tweening.ColorSeq(instance: Instance, tweenInfo: TweenInfo, goal: table)
     local self = setmetatable({}, Tweening)
     self.type = "ColorSeq"
     self.instance = instance
     self.tweenInfo = tweenInfo
     self.goal = goal
-    self.realtween = {}
 
     return self
 end
 
 function Tweening:Play()
-    if self.type == "NumSeq" then
-        local tween = tweenNumSeq(self)
-        self.realtween = tween
-    elseif self.type == "ColorSeq" then
-        local tween = tweenColorSeq(self)
-        self.realtween = tween
+    if self.realtween[1] then
+        self.realtween:Play()
+    else
+        if self.type == "NumSeq" then
+            local tween = tweenNumSeq(self)
+            self.realtween = tween
+        elseif self.type == "ColorSeq" then
+            local tween = tweenColorSeq(self)
+            self.realtween = tween
+        end
     end
 end
 
