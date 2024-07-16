@@ -178,7 +178,7 @@ end
 
 function ZoneVisual:TweenTransparency(tweenInfo: TweenInfo, number: number)
 	for _,v in self.beams do
-		local tween = Tweening.ColorSeq(v, tweenInfo, {Transparency = number})
+		local tween = Tweening.NumSeq(v, tweenInfo, {Transparency = number})
 		table.insert(self.tweens, tween)
 		tween:Play()
 	end
