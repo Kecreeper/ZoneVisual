@@ -139,6 +139,7 @@ end
 function ZoneVisual:Tween(tweenInfo: TweenInfo, properties: table)
 	for _,v in self.beams do
 		local tween = TweenService:Create(v, tweenInfo, properties)
+		self.beams = {}
 		table.insert(self.beams, tween)
 		tween:Play()
 	end
