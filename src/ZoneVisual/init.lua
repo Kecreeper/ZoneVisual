@@ -68,7 +68,7 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	table.insert(attachments, A3)
 	table.insert(attachments, A4)
 
-	for i,v in attachments do
+	for _,v in attachments do
 		v.Parent = part
 	end
 
@@ -88,7 +88,7 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 	table.insert(beams, B3)
 	table.insert(beams, B4)
 
-	for i,v: Beam in beams do
+	for _,v: Beam in beams do
 		v.Parent = part
 		v.Width0 = height
 		v.Width1 = height
@@ -180,13 +180,13 @@ function ZoneVisual:TweenTransparency()
 
 end
 
--- below is not touched yet
-function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence, lightEmission: number, lightInfluence: number, transparency:number, segments: number)
+function ZoneVisual.newCircle(part:BasePart, height: number, properties: table)
 	if part == nil then
-		error("No part selected")
+		error("No part inputted")
 	elseif not part:IsA("BasePart") then
-		error('Selected "' .. part.Name .. '" is not a BasePart')
+		error('Inputted "' .. part.Name .. '" is not a BasePart')
 	end
+
 	if height == nil then
 		error("No height inputted")
 	elseif height == 0 or height <= 0 then
@@ -194,16 +194,6 @@ function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence
 	end
 	
 	local height = height*2
-	local color = color or ColorSequence.new(Color3.new(1,1,1))
-	local lightEmission = lightEmission or 0
-	local lightInfluence = lightInfluence or 1
-	if transparency ~= nil then
-		transparency = NumberSequence.new(transparency)
-	else
-		transparency = NumberSequence.new(.5)
-	end
-	local segments = segments or 200
-	local texture = "http://www.roblox.com/asset/?id=18153329100"
 
 	local x = part.Size.X/2
 	local y = part.Size.Y/2
@@ -227,7 +217,7 @@ function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence
 	table.insert(attachments, A1)
 	table.insert(attachments, A2)
 
-	for i,v in attachments do
+	for _,v in attachments do
 		v.Parent = part
 	end
 
@@ -241,18 +231,23 @@ function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence
 	table.insert(beams, B1)
 	table.insert(beams, B2)
 
-	for i,v in beams do
+	for _,v: Beam in beams do
 		v.Parent = part
-		v.Color = color
-		v.Texture = texture
 		v.Width0 = height
 		v.Width1 = height
-		v.Segments = segments
-		v.LightEmission = lightEmission
-		v.LightInfluence = lightInfluence
-		v.Transparency = transparency
+		v.Segments = 200
+		v.Texture = "http://www.roblox.com/asset/?id=18153329100"
 		v.TextureMode = Enum.TextureMode.Static
 		v.TextureSpeed = 0
+	end
+
+	if properties then
+		properties = checkProperties(properties)
+		for i,v in properties do
+			for _,beam in beams do
+				beam[i] = v
+			end
+		end
 	end
 
 	B1.Attachment0 = A1
@@ -267,6 +262,11 @@ function ZoneVisual.newCircle(part:BasePart, height: number, color:ColorSequence
 	B2.CurveSize0 = curve2
 	B2.CurveSize1 = curve1
 
+	local self = setmetatable({}, ZoneVisual)
+	self.beams = beams
+	self.tweens = {}
+
+	return self
 end
 -----------------------
 
