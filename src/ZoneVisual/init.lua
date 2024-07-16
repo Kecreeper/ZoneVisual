@@ -176,8 +176,12 @@ function ZoneVisual:TweenColor(tweenInfo: TweenInfo, color: Color3)
 	end
 end
 
-function ZoneVisual:TweenTransparency()
-
+function ZoneVisual:TweenTransparency(tweenInfo: TweenInfo, color: Color3)
+	for _,v in self.beams do
+		local tween = Tweening.ColorSeq(v, tweenInfo, {Color = color})
+		table.insert(self.tweens, tween)
+		tween:Play()
+	end
 end
 
 function ZoneVisual.newCircle(part:BasePart, height: number, properties: table)
