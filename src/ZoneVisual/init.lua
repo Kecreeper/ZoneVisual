@@ -184,6 +184,14 @@ function ZoneVisual:TweenTransparency(tweenInfo: TweenInfo, number: number)
 	end
 end
 
+function ZoneVisual:ChangeProperties(properties: table)
+	for i,v in properties do
+		for _,beam in self.beams do
+			beam[i] = v
+		end
+	end
+end
+
 function ZoneVisual.newCircle(part:BasePart, height: number, properties: table)
 	if part == nil then
 		error("No part inputted")
