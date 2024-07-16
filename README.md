@@ -49,7 +49,7 @@ https://github.com/user-attachments/assets/62b2805f-c213-4dca-b034-3a15fe27dc42
 ```
 
 Zone Types
-automatically takes the longest length of a basepart for a circle's radius
+- automatically takes the longest length of a basepart for a circle's radius
 ```
   - "Rectangle"
   - "Circle"
