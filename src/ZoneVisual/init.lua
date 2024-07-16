@@ -172,6 +172,7 @@ end
 function ZoneVisual:TweenColor(tweenInfo: TweenInfo, color: Color3)
 	for _,v in self.beams do
 		local tween = Tweening.ColorSeq(v, tweenInfo, {Color = color})
+		self.beams = {}
 		table.insert(self.tweens, tween)
 		tween:Play()
 	end
