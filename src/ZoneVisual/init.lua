@@ -198,23 +198,22 @@ function ZoneVisual.new(part:BasePart, height: number, zoneType: string, propert
 
 	local object
 	if zoneType == "Rectangle" then
-		object = makeRectangle()
-	elseif type == "Circle" then
-		object = makeCircle()
+		object = makeRectangle(part, height)
+	elseif zoneType == "Circle" then
+		object = makeCircle(part, height)
 	else
-		error('Inputted "' .. zoneType '" is not a valid type')
+		error('Inputted "' .. zoneType .. '" is not a valid type')
 	end
 
 	if properties then
 		applyProperties(properties, object)
 	end
+
+	return object
 end
 
 function ZoneVisual:Destroy()
 	for _,v in self.beams do
-		v:Destroy()
-	end
-	for _,v in self.tweens do
 		v:Destroy()
 	end
 end
@@ -222,7 +221,7 @@ end
 function ZoneVisual:Tween(tweenInfo: TweenInfo, properties: table)
 	for _,v in self.beams do
 		local tween = TweenService:Create(v, tweenInfo, properties)
-		table.insert(self.beams, tween)
+		table.insert(self.tweens, tween)
 		tween:Play()
 	end
 end
