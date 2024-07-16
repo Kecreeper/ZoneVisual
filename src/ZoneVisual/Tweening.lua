@@ -1,3 +1,5 @@
+--# selene: allow(shadowing)
+
 local Tweening = {}
 Tweening.__index = Tweening
 
@@ -50,7 +52,13 @@ local function evalColorSequence(sequence: ColorSequence, time: number)
     end
 end
 
-local function tweenNumSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: number)
+local function tweenNumSeq(self)
+    local instance = self.instance
+    local tweenInfo = self.tweenInfo
+    local goal = self.goal
+
+    local property, goal = next(goal, nil)
+
     local num = Instance.new("NumberValue")
     num.Value = evalNumberSequence(instance[property], 0)
     local tween = TweenService:Create(num, tweenInfo, {Value = goal})
@@ -66,7 +74,13 @@ local function tweenNumSeq(instance: Instance, property: string, tweenInfo: Twee
     return tween
 end
 
-local function tweenColorSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: Color3)
+local function tweenColorSeq(self)
+    local instance = self.instance
+    local tweenInfo = self.tweenInfo
+    local goal = self.goal
+
+    local property, goal = next(goal, nil)
+
     local clr = Instance.new("Color3Value")
     clr.Value = evalColorSequence(instance[property], 0)
     local tween = TweenService:Create(clr, tweenInfo, {Value = goal})
@@ -82,7 +96,7 @@ local function tweenColorSeq(instance: Instance, property: string, tweenInfo: Tw
     return tween
 end
 
-function Tweening.NumSeq(instance: Instance, tweenInfo: TweenInfo, goal: number)
+function Tweening.NumSeq(instance: Instance, tweenInfo: TweenInfo, goal: table)
     local self = setmetatable({}, Tweening)
     self.type = "NumSeq"
     self.instance = instance
@@ -93,11 +107,10 @@ function Tweening.NumSeq(instance: Instance, tweenInfo: TweenInfo, goal: number)
     return self
 end
 
-function Tweening.ColorSeq(instance: Instance, property: string, tweenInfo: TweenInfo, goal: Color3)
+function Tweening.ColorSeq(instance: Instance, tweenInfo: TweenInfo, goal: Color3)
     local self = setmetatable({}, Tweening)
     self.type = "ColorSeq"
     self.instance = instance
-    self.property = property
     self.tweenInfo = tweenInfo
     self.goal = goal
     self.realtween = {}
@@ -107,10 +120,10 @@ end
 
 function Tweening:Play()
     if self.type == "NumSeq" then
-        local tween = tweenNumSeq(self.instance, self.property, self.tweenInfo, self.goal)
+        local tween = tweenNumSeq(self)
         self.realtween = tween
     elseif self.type == "ColorSeq" then
-        local tween = tweenColorSeq(self.instance, self.property, self.tweenInfo, self.goal)
+        local tween = tweenColorSeq(self)
         self.realtween = tween
     end
 end

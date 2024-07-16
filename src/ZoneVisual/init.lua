@@ -1,5 +1,4 @@
 --# selene: allow(shadowing)
---# selene: allow(unused_variable)
 
 local ZoneVisual = {}
 ZoneVisual.__index = ZoneVisual
@@ -139,9 +138,9 @@ function ZoneVisual:Destroy()
 end
 
 function ZoneVisual:Tween(tweenInfo: TweenInfo, properties: table)
-	for i,v in self.beams do
+	for _,v in self.beams do
 		local tween = TweenService:Create(v, tweenInfo, properties)
-		self.tweens[i] = tween
+		table.insert(self.beams, tween)
 		tween:Play()
 	end
 end
@@ -159,13 +158,7 @@ function ZoneVisual:Pause()
 end
 
 function ZoneVisual.getTweens(zone)
-	local table = {}
-
-	for i,v in zone.tweens do
-		table[i] = v
-	end
-
-	return table
+	return zone.tweens
 end
 
 function ZoneVisual:TweenColor(tweenInfo: TweenInfo, color3: Color3)
