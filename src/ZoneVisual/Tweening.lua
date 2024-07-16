@@ -130,6 +130,10 @@ function Tweening:Play()
     end
 end
 
+function Tweening:Pause()
+    self.realtween:Cancel()
+end
+
 function Tweening:Cancel()
     self.realtween:Cancel()
 end
