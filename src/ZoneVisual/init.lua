@@ -121,7 +121,7 @@ function ZoneVisual.newSquare(part:BasePart, height: number, properties: table)
 
 	local self = setmetatable({}, ZoneVisual)
 	self.beams = beams
-	self.tweens = {}
+	self.tweens = nil
 
 	print(self)
 	return self
@@ -157,7 +157,7 @@ function ZoneVisual:Pause()
 end
 
 function ZoneVisual:Resume()
-	if self.tweens[1] then
+	if self.tweens then
 		for _,v in self.tweens do
 			v:Play()
 		end

@@ -117,7 +117,7 @@ function Tweening.ColorSeq(instance: Instance, tweenInfo: TweenInfo, goal: table
 end
 
 function Tweening:Play()
-    if self.realtween[1] then
+    if self.realtween then
         self.realtween:Play()
     else
         if self.type == "NumSeq" then
